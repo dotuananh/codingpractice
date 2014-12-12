@@ -61,14 +61,10 @@ void addEndNode(NODE** head, int value) {
     // and then add the new node there. The head pointer is still the same
     // because we only change the tail of the list.
     NODE* currentNode = *head;
-    /*DEBUG*/cout << "Bookmark #1" << endl;
-    /*DEBUG*/if (currentNode != NULL) { cout << "currentNode value = " << currentNode->data << endl;}
     // Go until we reach the end of the list
     while (currentNode->next != NULL) {
-      /*DEBUG*/cout << "Bookmark #2" << endl;
       currentNode = currentNode->next;
     }
-    /*DEBUG*/cout << "Bookmark #3" << endl;
     // Add the new node to the end of the list
     currentNode->next = newNode;
   }
@@ -375,29 +371,39 @@ void removeDuplicates(NODE* head) {
 // Merge 2 shorted linked lists
 // -----------------------------------------------------------------------------
 NODE* mergeTwoShortedLinkedLists(NODE* head1, NODE* head2) {
-  NODE* head;
-  // Iterate each item of the two lists until we reach to the end of both lists
-  while (head1 != NULL || head2 != NULL) {
+  NODE* head = NULL;
+  // Iterate each item of the two lists
+  // until we reach to the end of at least 1 lists
+  while (head1 != NULL && head2 != NULL) {
     // If the current value of list1 is smaller than the current value of list2
-    // OR
-    // We've reached the end of list 2 where there's no need to compare them
     // --> add the value of list 1 to the new list
-    if (head2 == NULL || head1->data <= head2->data) {
+    if (head1->data <= head2->data) {
       addEndNode(&head, head1->data);
       // move to the next node in list 1, list 2 stays still
       head1 = head1->next;
     }
     // same logic here
     // if the current value of list2 is smaller than the current value of list1
-    // OR
-    // we've reached the end of list 1 where there's no need to compare them
     // --> add the value of list 2 to the new list
-    else if (head1 == NULL || head2->data < head1->data) {
+    else if (head2->data < head1->data) {
       addEndNode(&head, head2->data);
       // move to the next node in list 2, list 1 stays still
       head2 = head2->next;
     }
   }
+
+  // If we reach this part of code, at least one of the list is now empty,
+  // all we need to do is to add the rest of the list that is still not empty
+  // to the new list
+  while (head1 != NULL) {
+    addEndNode(&head, head1->data);
+    head1 = head1->next;
+  }
+  while (head2 != NULL) {
+    addEndNode(&head, head2->data);
+    head2 = head2->next;
+  }
+
   return head;
 }
 
@@ -408,6 +414,9 @@ int main (int argc, char* argv[]) {
   NODE* myList1 = NULL;
 
   // --- addBeginningNode --- //
+  addBeginningNode(&myList1, 15);
+  addBeginningNode(&myList1, 13);
+  addBeginningNode(&myList1, 11);
   addBeginningNode(&myList1, 9);
   addBeginningNode(&myList1, 7);
   addBeginningNode(&myList1, 5);

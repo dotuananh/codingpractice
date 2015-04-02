@@ -5,8 +5,9 @@
 // Created  : March 8th, 2011
 //
 ////////////////////////////////////////////////////////////////////////////////
-/*
+
 #include <iostream>
+#include <queue>
 using namespace std;
 
 // -----------------------------------------------------------------------------
@@ -127,7 +128,9 @@ NODE* createBinarySearchTree() {
 }
 
 // -----------------------------------------------------------------------------
-// Find whether a node exists in a bianry tree
+// Find whether a node exists in a binary tree
+// Depth-First Search - Recursion
+// [PIE] - Chapter 5
 // -----------------------------------------------------------------------------
 NODE* findNode(NODE* root, int value) {
   // BASE CASE: The tree is empty!
@@ -150,6 +153,8 @@ NODE* findNode(NODE* root, int value) {
 
 // -----------------------------------------------------------------------------
 // Search for a node in a binary search tree
+// Depth-First Search - No recursion
+// [PIE] - Chapter 5
 // -----------------------------------------------------------------------------
 NODE* findNode2(NODE* root, int value) {
   // We can solve this problem using recursion but while is much better
@@ -238,7 +243,6 @@ NODE* findLowestCommonAncestor(NODE* root, int value1, int value2) {
   }
   // Otherwise, this root is the answer!
   return root;
-
 }
 
 // -----------------------------------------------------------------------------
@@ -257,6 +261,45 @@ int findLargest(NODE* root, int value) {
 }
 
 // -----------------------------------------------------------------------------
+// Implement Breath-First Search
+// [PIE] - Chapter 5
+// -----------------------------------------------------------------------------
+bool findNode3(NODE* root, const int value) {
+  // The queue to keep track of the nodes to visit
+  queue<NODE*> nodeQueue;
+
+  // Special case when the tree is empty
+  if (root == NULL) {
+    cerr << "The tree is empty" << endl;
+    return false;
+  }
+
+  // Push the root to the queue for the loop to start
+  nodeQueue.push(root);
+  while (!nodeQueue.empty()) {
+    // Check if the node is the one we're finding
+    NODE* currentNode = nodeQueue.front();
+    nodeQueue.pop();
+    if (currentNode->data == value) {
+      cout << "Found the node id=" << currentNode->id << endl;
+      return true;
+    }
+
+    // If it's not, push all the children nodes to the queue and
+    // continue the loop
+    if (currentNode->leftChild != NULL) {
+      nodeQueue.push(currentNode->leftChild);
+    }
+    if (currentNode->rightChild != NULL) {
+      nodeQueue.push(currentNode->rightChild);
+    }
+  }
+
+  // End of the loop and we can't find the node with that value
+  return false;
+}
+
+// -----------------------------------------------------------------------------
 // Insert/delete a node in a binary tree
 // Insert/delete a node in a binary search tree
 // Implement haep
@@ -270,7 +313,8 @@ int findLargest(NODE* root, int value) {
 // Main function, nothing much in this one
 // -----------------------------------------------------------------------------
 int main(int argc, char* argv[]) {
-  NODE* myTree = createBinarySearchTree();
+//  NODE* myTree = createBinarySearchTree();
+  NODE* myTree = createBinaryTree();
 
   // --- findNode --- //
 //  NODE* temp = findNode(myTree, 100);
@@ -301,6 +345,11 @@ int main(int argc, char* argv[]) {
   // --- Find lowest common ancestor --//
 //  cout << "Number = " << findLargest(myTree, 152);
 
+  // --- findNode3 ---//
+  if (!findNode3(myTree, 5)) {
+    cout << "Can't find a node with that value!" << endl;
+  }
+
+
   return 0;
 }
-*/
